@@ -26,11 +26,11 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "about",
-        name: "About",
-        component: () => import("@/views/about/index.vue"),
+        path: "my",
+        name: "My",
+        component: () => import("@/views/my/index.vue"),
         meta: {
-          title: "关于",
+          title: "我的",
           noCache: true
         }
       }
