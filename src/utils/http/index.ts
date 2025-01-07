@@ -8,11 +8,12 @@ import { ContentTypeEnum, ResultEnum } from "@/enums/request-enum";
 import NProgress from "../progress";
 import { showFailToast } from "vant";
 import "vant/es/toast/style";
+import { useAuthStore } from "@/store/modules/auth";
 
 // 默认 axios 实例请求配置
 const configDefault = {
   headers: {
-    "Content-Type": ContentTypeEnum.FORM_URLENCODED
+    "Content-Type": ContentTypeEnum.JSON
   },
   timeout: 0,
   baseURL: import.meta.env.VITE_BASE_API,
@@ -106,6 +107,10 @@ class Http {
             break;
           default:
             message = "网络连接故障";
+        }
+
+        if (status === 401) {
+          useAuthStore().logout();
         }
 
         showFailToast(message);

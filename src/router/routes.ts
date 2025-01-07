@@ -7,7 +7,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "root",
     component: Layout,
-    redirect: { name: "Demo" },
+    redirect: { name: "Home" },
     children: [
       {
         path: "demo",
@@ -31,10 +31,19 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/my/index.vue"),
         meta: {
           title: "我的",
-          noCache: true
+          noCache: true,
+          requireAuth: true
         }
       }
     ]
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("@/views/login/index.vue"),
+    meta: {
+      title: "登录"
+    }
   }
 ];
 

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { reactive } from "vue";
+import { useAuthStore } from "@/store/modules/auth";
 
 defineOptions({
   name: "My"
 });
 
 const data = reactive({
-  avatar: "",
-  nickName: ""
+  avatar: "https://avatars.githubusercontent.com/u/40857942?v=4",
+  nickName: "Levi"
 });
 
 const listData = reactive([
@@ -48,13 +49,15 @@ const listData = reactive([
   }
 ]);
 
-const lgout = () => {};
+const lgout = () => {
+  useAuthStore().logout();
+};
 </script>
 
 <template>
-  <div class="flex mb-8">
-    <img src="" alt="" srcset="" />
-    <div class="name">{{ data.nickName }}</div>
+  <div class="bg-slate-600 p-6 flex items-center mb-8">
+    <img class="mr-4 h-20 rounded-full" :src="data.avatar" alt="" srcset="" />
+    <div class="text-white text-2xl">{{ data.nickName }}</div>
   </div>
 
   <van-cell-group class="mb-8">
@@ -79,3 +82,9 @@ const lgout = () => {};
     >
   </div>
 </template>
+
+<style lang="less" scoped>
+.head {
+  background-color: #33384a;
+}
+</style>

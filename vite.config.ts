@@ -61,6 +61,12 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "^/dev-api": {
           target: ""
+        },
+        "/api": {
+          // 这里填写后端地址
+          target: "http://36.111.148.143:9101",
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/api/, "")
         }
       }
     },
