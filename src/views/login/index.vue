@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { showToast } from "vant";
 import { sendSmsCode, userLogin, userRegister } from "@/api/login";
+import { useAuthStore } from "@/store/modules/auth";
 
 defineOptions({
   name: "Login"
@@ -11,8 +12,7 @@ defineOptions({
 const isRegister = ref(false);
 // 是否验证码登录
 const isCode = ref(false);
-const username = ref("");
-const password = ref("");
+const mobile = ref("");
 const code = ref("");
 
 let totalSecond = ref(60);
@@ -25,7 +25,7 @@ const getCode = async () => {
     // 发送请求，获取验证码
     const params = {
       option: isRegister.value ? 1 : 2,
-      phone: username.value,
+      phone: mobile.value,
       type: "client"
     };
     await sendSmsCode(params);
@@ -44,7 +44,18 @@ const getCode = async () => {
 };
 
 const onSubmit = values => {
+  const params = {
+    ...values
+  };
+  if (!isRegister.value)
+    params.type = !isCode.value ? "pwdLogin" : "smsCodeLogin";
+  useAuthStore().login(params, isRegister.value);
   console.log("submit", values);
+};
+
+const reset = () => {
+  mobile.value = "";
+  code.value = "";
 };
 </script>
 
@@ -55,17 +66,17 @@ const onSubmit = values => {
     <van-form @submit="onSubmit">
       <van-cell-group inset>
         <van-field
-          v-model="username"
-          name="手机号"
+          v-model="mobile"
+          name="mobile"
           label="手机号"
           placeholder="手机号"
           :rules="[{ required: true, message: '请填写手机号' }]"
         />
         <van-field
           v-if="!isCode"
-          v-model="password"
+          v-model="code"
           type="password"
-          name="密码"
+          name="code"
           label="密码"
           placeholder="密码"
           :rules="[{ required: true, message: '请填写密码' }]"
@@ -74,7 +85,7 @@ const onSubmit = values => {
           v-else
           v-model="code"
           clearable
-          name="验证码"
+          name="code"
           label="验证码"
           placeholder="验证码"
           :rules="[{ required: true, message: '请填写验证码' }]"
@@ -82,7 +93,7 @@ const onSubmit = values => {
           <template #button>
             <van-button
               size="small"
-              :disabled="!username || second !== totalSecond"
+              :disabled="!mobile || second !== totalSecond"
               @click="getCode"
               >{{
                 second === totalSecond ? "获取验证码" : second + `s 重新发送`
@@ -93,15 +104,29 @@ const onSubmit = values => {
       </van-cell-group>
       <div class="m-6">
         <van-button round block type="danger" native-type="submit">
-          登录
+          {{ isRegister ? "注册" : "登录" }}
         </van-button>
         <div
           class="text-center text-xl text-current p-6"
-          @click="isCode = !isCode"
+          @click="
+            isRegister = false;
+            isCode = !isCode;
+            reset();
+          "
         >
           {{ isCode ? "账号密码登录" : "手机短信登录" }}
         </div>
-        <div class="text-center text-large text-red-500 p-6">快速注册</div>
+        <div
+          v-if="!isRegister"
+          class="text-center text-large text-red-500 p-6"
+          @click="
+            isRegister = true;
+            isCode = true;
+            reset();
+          "
+        >
+          快速注册
+        </div>
       </div>
     </van-form>
   </div>

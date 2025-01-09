@@ -7,8 +7,8 @@ defineOptions({
 });
 
 const data = reactive({
-  avatar: "https://avatars.githubusercontent.com/u/40857942?v=4",
-  nickName: "Levi"
+  avatar: useAuthStore().user.avatar || "https://avatars.githubusercontent.com/u/40857942?v=4",
+  nickName: useAuthStore().user.nickName || ""
 });
 
 const listData = reactive([

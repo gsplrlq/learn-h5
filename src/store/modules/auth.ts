@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 
 import router from "@/router";
+import { store } from "@/store";
+
+import { userLogin, userRegister } from "@/api/login";
 
 export const useAuthStore = defineStore({
   id: "auth",
@@ -10,12 +13,11 @@ export const useAuthStore = defineStore({
     returnUrl: null
   }),
   actions: {
-    async login(username, password) {
+    async login(params, isRegister) {
       try {
-        const user = await userLogin({
-          username,
-          password
-        });
+        const user = isRegister
+          ? await userRegister(params)
+          : await userLogin(params);
 
         // update pinia state
         this.user = user;
@@ -36,3 +38,7 @@ export const useAuthStore = defineStore({
     }
   }
 });
+
+export function useAuthStoreHook() {
+  return useAuthStore(store);
+}
