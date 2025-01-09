@@ -7,7 +7,9 @@ defineOptions({
 });
 
 const data = reactive({
-  avatar: useAuthStore().user.avatar || "https://avatars.githubusercontent.com/u/40857942?v=4",
+  avatar:
+    useAuthStore().user.avatar ||
+    "https://avatars.githubusercontent.com/u/40857942?v=4",
   nickName: useAuthStore().user.nickName || ""
 });
 
