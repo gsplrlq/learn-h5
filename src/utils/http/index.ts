@@ -32,7 +32,7 @@ class Http {
       config => {
         NProgress.start();
         // 发送请求前，可在此携带 token
-        const token = useAuthStore().user.token || "";
+        const token = useAuthStore().user?.token || "";
         if (token) {
           config.headers["token"] = token;
         }

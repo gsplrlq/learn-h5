@@ -18,35 +18,35 @@ const listData = reactive([
     icon: "hugeicons:online-learning-01",
     title: "我的课程",
     to: {
-      name: "Course"
+      name: "MyCourse"
     }
   },
   {
     icon: "lets-icons:order",
     title: "订单中心",
     to: {
-      name: "Tools"
+      name: "MyOrder"
     }
   },
   {
     icon: "ic:baseline-dvr",
     title: "我的考试",
     to: {
-      name: "My"
+      name: "MyExam"
     }
   },
   {
     icon: "ic:round-card-membership",
     title: "我的证书",
     to: {
-      name: "My"
+      name: "MyCertificate"
     }
   },
   {
     icon: "ic:round-event-note",
     title: "我的笔记",
     to: {
-      name: "My"
+      name: "MyNote"
     }
   }
 ]);
