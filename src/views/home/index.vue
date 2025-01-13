@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div class="header">
+    <div
+      class="header"
+      style="position: sticky; top: 0; z-index: 1000; background-color: white"
+    >
       <div class="logo">
         <img src="@/assets/images/logo.png" alt="Logo" />
         <img src="@/assets/images/logo_text.png" alt="Logo" />
       </div>
-      <van-tabs sticky>
+      <van-tabs>
         <van-tab
           v-for="m in menu"
           :key="m.name"
@@ -36,12 +39,7 @@
             :key="course.id"
             span="24"
           >
-            <van-card
-              :title="course.title"
-              :desc="course.courseDesc"
-              :thumb="course.imgUrl"
-              @click="goToCourse(course.id)"
-            />
+            <course-card :course="course" />
           </van-col>
         </van-row>
       </div>
@@ -57,12 +55,7 @@
             :key="course.id"
             span="24"
           >
-            <van-card
-              :title="course.title"
-              :desc="course.courseDesc"
-              :thumb="course.imgUrl"
-              @click="goToCourse(course.id)"
-            />
+            <course-card :course="course" />
           </van-col>
         </van-row>
       </div>
@@ -74,6 +67,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { postBannerList, getHomeCourse } from "@/api/home";
+import CourseCard from "@/components/course/index.vue";
 defineOptions({
   name: "Home"
 });
@@ -89,9 +83,6 @@ const router = useRouter();
 const swipe = ref([]);
 const courses = ref({ hotCourseList: [], newCourseList: [] });
 
-const goToCourse = (id: number) => {
-  router.push({ name: "CourseDetail", params: { id } });
-};
 onMounted(() => {
   postBannerList().then(data => {
     swipe.value = data;
@@ -111,9 +102,6 @@ onMounted(() => {
 }
 .logo img {
   height: 25px;
-}
-.menu-item {
-  flex: 2;
 }
 .my-swipe {
   height: 200px;
