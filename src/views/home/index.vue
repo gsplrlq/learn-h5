@@ -25,7 +25,7 @@ import { computed, ref, shallowRef } from "vue";
 import Home from "./home.vue";
 import Course from "./course.vue";
 defineOptions({
-  name: "index"
+  name: "Index"
 });
 
 const active = ref(0);
