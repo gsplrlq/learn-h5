@@ -1,102 +1,47 @@
 <template>
-  <div>
-    <div
-      class="header"
-      style="position: sticky; top: 0; z-index: 1000; background-color: white"
-    >
-      <div class="logo">
-        <img src="@/assets/images/logo.png" alt="Logo" />
-        <img src="@/assets/images/logo_text.png" alt="Logo" />
-      </div>
-      <van-tabs>
-        <van-tab
-          v-for="m in menu"
-          :key="m.name"
-          class="menu-item"
-          :title="m.title"
-          :name="m.name"
-          :to="m.to"
-        />
-      </van-tabs>
+  <div
+    class="header"
+    style="position: sticky; top: 0; z-index: 1000; background-color: white"
+  >
+    <div class="logo">
+      <img src="@/assets/images/logo.png" alt="Logo" />
+      <img src="@/assets/images/logo_text.png" alt="Logo" />
     </div>
-    <van-swipe class="my-swipe" autoplay="3000">
-      <van-swipe-item v-for="(item, index) in swipe" :key="index">
-        <a :href="item.link" target="_blank">
-          <img :src="item.imageUrl" :alt="item.title" />
-        </a>
-      </van-swipe-item>
-    </van-swipe>
-    <div class="course-list">
-      <div class="course-section">
-        <h3 class="centered-title">
-          <i class="centered-title-icon" />
-          为／你／推／荐
-          <i class="centered-title-icon icon1" />
-        </h3>
-        <van-row gutter="20">
-          <van-col
-            v-for="course in courses.hotCourseList"
-            :key="course.id"
-            span="24"
-          >
-            <course-card :course="course" />
-          </van-col>
-        </van-row>
-      </div>
-      <div class="course-section">
-        <h3 class="centered-title">
-          <i class="centered-title-icon icon1" />
-          新／上／好／课
-          <i class="centered-title-icon icon2" />
-        </h3>
-        <van-row gutter="20">
-          <van-col
-            v-for="course in courses.newCourseList"
-            :key="course.id"
-            span="24"
-          >
-            <course-card :course="course" />
-          </van-col>
-        </van-row>
-      </div>
-    </div>
+    <van-tabs v-model:active="active">
+      <van-tab
+        v-for="m in menu"
+        :key="m.name"
+        class="menu-item"
+        :title="m.title"
+      />
+    </van-tabs>
   </div>
+
+  <component :is="activeComponent" />
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import { postBannerList, getHomeCourse } from "@/api/home";
-import CourseCard from "@/components/course/index.vue";
+import { computed, ref, shallowRef } from "vue";
+import Home from "./home.vue";
+import Course from "./course.vue";
 defineOptions({
-  name: "Home"
+  name: "index"
 });
 
-const menu = ref([
-  { title: "首页", name: "", to: { name: "Home" } },
-  { title: "免费课", name: "free", to: { name: "Home" } },
-  { title: "付费课", name: "paid", to: { name: "Home" } },
-  { title: "培训套餐", name: "package", to: { name: "Home" } },
-  { title: "在线考试", name: "exam", to: { name: "Home" } }
+const active = ref(0);
+const activeComponent = computed(() => menu.value[active.value].component);
+const menu = shallowRef([
+  { title: "首页", name: "index", component: Home },
+  { title: "免费课", name: "free", component: Course },
+  { title: "付费课", name: "paid", component: Course },
+  { title: "培训套餐", name: "package", component: Home },
+  { title: "在线考试", name: "exam", component: Home }
 ]);
-const router = useRouter();
-const swipe = ref([]);
-const courses = ref({ hotCourseList: [], newCourseList: [] });
-
-onMounted(() => {
-  postBannerList().then(data => {
-    swipe.value = data;
-  });
-  getHomeCourse().then(data => {
-    courses.value = data;
-  });
-});
 </script>
 
 <style scoped lang="less">
 .logo {
   padding: 15px;
-  // height: 30px;
   display: flex;
   align-items: center;
 }
