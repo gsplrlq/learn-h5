@@ -1,11 +1,5 @@
 import { http } from "@/utils/http";
 
-// type any = {
-//   code: number;
-//   message: string;
-//   data: any;
-// };
-
 // 获取用户课程信息接口
 export function getUserCourse(data?: object): Promise<any> {
   return http.request({

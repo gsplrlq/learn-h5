@@ -113,6 +113,7 @@ class Http {
         }
 
         showFailToast(message);
+        console.error("HTTP Error: ", error);
         return Promise.reject(error);
       }
     );

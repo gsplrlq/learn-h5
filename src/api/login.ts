@@ -1,13 +1,7 @@
 import { http } from "@/utils/http";
 
-type Result = {
-  code: number;
-  message: string;
-  data: any;
-};
-
 // 获取验证码
-export function upload(data?: object): Promise<Result> {
+export function upload(data?: object): Promise<any> {
   return http.request({
     url: "/client/fileTable/uploadSign",
     method: "post",
@@ -16,7 +10,7 @@ export function upload(data?: object): Promise<Result> {
 }
 
 // 获取验证码
-export function sendSmsCode(data?: object): Promise<Result> {
+export function sendSmsCode(data?: object): Promise<any> {
   return http.request({
     url: "/public/base/smscode/send",
     method: "post",
@@ -24,7 +18,7 @@ export function sendSmsCode(data?: object): Promise<Result> {
   });
 }
 // 验证验证码
-export function verifySmsCode(params?: object): Promise<Result> {
+export function verifySmsCode(params?: object): Promise<any> {
   return http.request({
     url: "/public/base/smscode/verifySmsCode",
     method: "post",
@@ -33,7 +27,7 @@ export function verifySmsCode(params?: object): Promise<Result> {
 }
 
 // 用户登录
-export function userLogin(data?: object): Promise<Result> {
+export function userLogin(data?: object): Promise<any> {
   return http.request({
     url: "/client/user/public/login",
     method: "post",
@@ -41,7 +35,7 @@ export function userLogin(data?: object): Promise<Result> {
   });
 }
 // 用户注册接口
-export function userRegister(data?: object): Promise<Result> {
+export function userRegister(data?: object): Promise<any> {
   return http.request({
     url: "/client/user/public/register",
     method: "post",
@@ -49,7 +43,7 @@ export function userRegister(data?: object): Promise<Result> {
   });
 }
 
-export function getUserInfo(): Promise<Result> {
+export function getUserInfo(): Promise<any> {
   return http.request({
     url: "/client/user/user/getUserInfo",
     method: "get"

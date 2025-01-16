@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="header"
-    style="position: sticky; top: 0; z-index: 1000; background-color: white"
-  >
+  <div class="header sticky top-0 z-10 bg-white">
     <div class="logo">
       <img src="@/assets/images/logo.png" alt="Logo" />
       <img src="@/assets/images/logo_text.png" alt="Logo" />
@@ -17,29 +14,35 @@
     </van-tabs>
   </div>
 
-  <component :is="activeComponent" />
+  <component :is="activeMenu.component" :type="activeMenu.type" />
 </template>
 
 <script setup lang="ts">
 import { computed, ref, shallowRef } from "vue";
 import Home from "./home.vue";
 import Course from "./course.vue";
+import Package from "./package.vue";
+import Exam from "./exam.vue";
+
 defineOptions({
   name: "Index"
 });
 
 const active = ref(0);
-const activeComponent = computed(() => menu.value[active.value].component);
+const activeMenu = computed(() => menu.value[active.value]);
 const menu = shallowRef([
   { title: "首页", name: "index", component: Home },
-  { title: "免费课", name: "free", component: Course },
-  { title: "付费课", name: "paid", component: Course },
-  { title: "培训套餐", name: "package", component: Home },
-  { title: "在线考试", name: "exam", component: Home }
+  { title: "免费课", name: "free", component: Course, type: 1 },
+  { title: "付费课", name: "paid", component: Course, type: 2 },
+  { title: "培训套餐", name: "package", component: Package },
+  { title: "在线考试", name: "exam", component: Exam }
 ]);
 </script>
 
 <style scoped lang="less">
+.header {
+  // height: 113px;
+}
 .logo {
   padding: 15px;
   display: flex;

@@ -2,6 +2,7 @@
   <van-card
     v-if="course.courseType !== 1"
     style="background-color: white"
+    class="mb-2"
     :title="course.title"
     :desc="course.courseDesc"
     :price="course.price"
@@ -19,6 +20,7 @@
   <van-card
     v-else
     style="background-color: white"
+    class="mb-2"
     :thumb="course.imgUrl"
     :title="course.title"
     :desc="course.courseDesc"

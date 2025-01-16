@@ -20,8 +20,8 @@
     @load="onLoad"
   >
     <van-row gutter="20">
-      <van-col v-for="course in courses" :key="course.id" span="24">
-        <course-card :course="course" />
+      <van-col v-for="data in packages" :key="data.id" span="24">
+        <package-card :package="data" />
       </van-col>
     </van-row>
   </van-list>
@@ -29,22 +29,11 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, computed, watch } from "vue";
-import CourseCard from "@/components/course/index.vue";
-import { getLessonNav, getLessonList } from "@/api/lesson";
+import PackageCard from "@/components/package/index.vue";
+import { getLessonNav, getTrainList } from "@/api/lesson";
 // Removed incorrect import
 
-const props = defineProps<{
-  type: number;
-}>();
-
-watch(
-  () => props.type,
-  () => {
-    initCourses();
-  }
-);
-
-const courses = ref([]);
+const packages = ref([]);
 const loading = ref(false);
 const finished = ref(false);
 const direction = ref("");
@@ -60,7 +49,7 @@ const filteredCategoryOptions = computed(() => {
 });
 
 defineOptions({
-  name: "Course"
+  name: "Package"
 });
 
 const onDirectionChange = (value: string) => {
@@ -69,7 +58,7 @@ const onDirectionChange = (value: string) => {
 };
 const dropdownChange = () => {
   page.value = 1;
-  initCourses();
+  initpackages();
 };
 
 const initNav = () => {
@@ -98,25 +87,23 @@ const onLoad = () => {
   page.value += 1;
   if (finished.value) return;
   loading.value = true;
-  initCourses();
+  initpackages();
 };
 
-const initCourses = () => {
+const initpackages = () => {
   const params = {
-    courseType: props.type || 1,
     categoryPCode: direction.value,
     categoryCode: category.value,
-    status: 1,
     page: {
       size: size,
       current: page.value
     }
   };
-  getLessonList(params).then(data => {
+  getTrainList(params).then(data => {
     if (page.value === 1) {
-      courses.value = data.records;
+      packages.value = data.records;
     } else {
-      courses.value = courses.value.concat(data.records);
+      packages.value = packages.value.concat(data.records);
     }
     loading.value = false;
     finished.value = data.records.length < size;
@@ -132,7 +119,7 @@ onMounted(() => {
 .my-swipe {
   height: 200px;
 }
-.course-list {
+.package-list {
   margin-top: 20px;
 }
 </style>
