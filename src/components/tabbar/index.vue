@@ -23,13 +23,13 @@ const tabbarData = reactive([
       name: "Index"
     }
   },
-  {
-    icon: "gem-o",
-    title: "工具",
-    to: {
-      name: "Tools"
-    }
-  },
+  // {
+  //   icon: "gem-o",
+  //   title: "工具",
+  //   to: {
+  //     name: "Tools"
+  //   }
+  // },
   {
     icon: "user-o",
     title: "我的",

@@ -96,6 +96,15 @@ const routes: Array<RouteRecordRaw> = [
           title: "我的笔记",
           requireAuth: true
         }
+      },
+
+      {
+        path: "course/:id",
+        name: "Course",
+        component: () => import("@/views/course/index.vue"),
+        meta: {
+          title: "课程详情"
+        }
       }
     ]
   }

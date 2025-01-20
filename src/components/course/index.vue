@@ -39,6 +39,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Card, Tag } from "vant";
+import { useRouter } from "vue-router";
 
 interface Course {
   imgUrl: string;
@@ -70,10 +71,14 @@ export default defineComponent({
       })
     }
   },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
   methods: {
     goToCourse(courseId: string) {
       // Implement navigation logic here
-      console.log(`Navigating to course with ID: ${courseId}`);
+      this.router.push({ path: `/course/${courseId}` });
     }
   }
 });

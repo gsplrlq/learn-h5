@@ -13,6 +13,9 @@
             <span style="min-width: 150px">{{ note.createTime }}</span>
           </div>
         </template>
+        <template #label>
+          <div class="line-clamp-3">{{ note.content }}</div>
+        </template>
       </van-cell>
     </van-list>
   </div>
