@@ -17,6 +17,7 @@
             :tag="` ${c.courseType === 1 ? '免费课' : '付费课'} `"
             :thumb="c.imgUrl"
             :title="`${c.title}`"
+            @click="router.push(`/course/${c.id}`)"
           >
             <template #desc>
               <div>
@@ -49,6 +50,7 @@
 import { ref, onMounted } from "vue";
 import { Tab, Tabs, Card } from "vant";
 import { getUserCourse } from "@/api/user"; // Adjust the import according to your project structure
+import { useRouter } from "vue-router";
 
 export default {
   components: {
@@ -57,6 +59,7 @@ export default {
     "van-card": Card
   },
   setup() {
+    const router = useRouter();
     const activeTab = ref(0);
     const tabList = [
       { id: 1, title: "全部", status: "" },
@@ -83,6 +86,8 @@ export default {
       });
     };
     const continueLearning = c => {
+      router.push(`/video/${c.id}/${c.videoId}`);
+      event.stopPropagation();
       // Jump to the course details page
       console.log(c);
     };
@@ -91,6 +96,7 @@ export default {
       getUserCourseData(tabList[0].status);
     });
     return {
+      router,
       activeTab,
       tabList,
       getTime,

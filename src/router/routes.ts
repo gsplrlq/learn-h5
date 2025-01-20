@@ -105,6 +105,32 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: "课程详情"
         }
+      },
+
+      {
+        path: "video/:courseId/:videoId",
+        name: "Video",
+        component: () => import("@/views/video/index.vue"),
+        meta: {
+          title: "视频详情"
+        }
+      },
+
+      {
+        path: "order/confirm/:courseId/:type",
+        name: "OrderConfirm",
+        component: () => import("@/views/order/confirm.vue"),
+        meta: {
+          title: "确认订单"
+        }
+      },
+      {
+        path: "order/pay/:orderSn",
+        name: "OrderPay",
+        component: () => import("@/views/order/pay.vue"),
+        meta: {
+          title: "订单详情"
+        }
       }
     ]
   }

@@ -18,7 +18,7 @@ export function getLessonList(data: object): Promise<any> {
 }
 
 // 课程详情
-export function getLessonDetail(id: string): Promise<any> {
+export function getLessonDetail(id: any): Promise<any> {
   return http.request({
     url: `/public/client/course/details/${id}`,
     method: "get"

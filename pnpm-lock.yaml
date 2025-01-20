@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      aliyun-aliplayer:
+        specifier: ^2.28.5
+        version: 2.28.5
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -1000,6 +1003,9 @@ packages:
   alien-signals@0.2.0:
     resolution: {integrity: sha512-StlonZhBBrsPPwrDjiPAiVTf/rolxffLxVPT60Qv/t88BZ81BvUVzHgGqEFvJ1ii8HXtm1+zU2Icr59tfWEcag==}
 
+  aliyun-aliplayer@2.28.5:
+    resolution: {integrity: sha512-UDy4Fj95fv/Syy0p8HRmYUGqadJHLuvucHEeJu6G71uHch87bllnaOI1r++ndfWu36oZph+dbArnP2eowR/Xsg==}
+
   ansi-regex@2.1.1:
     resolution: {integrity: sha512-TIGnTpdo+E3+pCyAluZvtED5p5wCqLdezCyhPZzKPcxvFplEt4i+W7OONCKgeZFT3+y5NZZfOOS/Bdcanm1MYA==}
     engines: {node: '>=0.10.0'}
@@ -1431,6 +1437,9 @@ packages:
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   css-select@4.3.0:
     resolution: {integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==}
@@ -4656,6 +4665,10 @@ snapshots:
 
   alien-signals@0.2.0: {}
 
+  aliyun-aliplayer@2.28.5:
+    dependencies:
+      crypto-js: 4.2.0
+
   ansi-regex@2.1.1: {}
 
   ansi-regex@5.0.1: {}
@@ -5155,6 +5168,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypto-js@4.2.0: {}
 
   css-select@4.3.0:
     dependencies:

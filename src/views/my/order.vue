@@ -23,16 +23,23 @@
             :status="order.status"
           >
             <template #footer>
-              <button v-if="order.status == 1" @click="payOrder(order.orderSn)">
-                立即支付
-              </button>
-              <button
-                v-if="order.status == 1"
-                @click="cancelOrderClick(order.orderSn)"
-              >
-                取消订单
-              </button>
-              <span>{{ order.status == 2 ? "已完成" : "已关闭" }}</span>
+              <template v-if="order.status == 1">
+                <van-button
+                  type="primary"
+                  size="small"
+                  @click="payOrder(order.orderSn)"
+                >
+                  立即支付
+                </van-button>
+                <van-button
+                  type="info"
+                  size="small"
+                  @click="cancelOrderClick(order.orderSn)"
+                >
+                  取消订单
+                </van-button>
+              </template>
+              <span v-else>{{ order.status == 2 ? "已完成" : "已关闭" }}</span>
             </template>
           </van-card>
         </div>
@@ -47,6 +54,8 @@ import { ref, onMounted } from "vue";
 import { Tab, Tabs, Card } from "vant";
 import { getOrderList, cancelOrder } from "@/api/order"; // Adjust the import according to your project structure
 import { useRouter } from "vue-router";
+import { showToast } from "vant";
+
 export default {
   components: {
     "van-tab": Tab,
@@ -54,6 +63,7 @@ export default {
     "van-card": Card
   },
   setup() {
+    const router = useRouter();
     const activeTab = ref(0);
     const tabList = [
       { id: 1, title: "全部", status: "" },
@@ -87,12 +97,11 @@ export default {
 
     const payOrder = orderSn => {
       // Implement payment logic
-      const router = useRouter();
-      router.push({ name: "PaymentPage", params: { orderSn } });
+      router.push({ name: "OrderPay", params: { orderSn } });
     };
     const cancelOrderClick = orderSn => {
-      cancelOrder(orderSn).then(() => {
-        this.$toast.success("取消成功");
+      cancelOrder({ orderSn }).then(() => {
+        showToast("取消成功");
         getOrderListData(tabList[0].status);
       });
     };

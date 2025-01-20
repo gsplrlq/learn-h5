@@ -48,8 +48,8 @@
               :key="subItem.id"
               :title="subItem.title"
               :label="`时长: ${subItem.durationStr}`"
-              @click="router.push(`/video/${course.id}/${subItem.videoId}`)"
             >
+              <!-- @click="router.push(`/video/${course.id}/${subItem.videoId}`)" -->
               <template #right-icon>
                 <i-icon
                   v-if="subItem.percent == 100"
@@ -87,7 +87,7 @@
         v-if="course.courseType === 2 && !course.bought"
         type="danger"
         text="立即购买"
-        @click="router.push(`/cart/confirm/${course.id}`)"
+        @click="router.push(`/order/confirm/${course.id}/1`)"
       />
       <van-action-bar-button
         v-else
@@ -100,7 +100,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getLessonDetail, getLessonChapter } from "@/api/lesson";
 import QuestionList from "./question.vue";
