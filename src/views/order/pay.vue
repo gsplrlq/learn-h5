@@ -10,7 +10,15 @@
         <van-radio class="p-4" name="wechat">微信支付</van-radio>
       </van-radio-group>
     </van-cell-group>
-    <van-button type="primary" @click="handlePayment">确认支付</van-button>
+    <div class="p-4">
+      <van-button
+        class="w-full"
+        type="primary"
+        text="确认支付"
+        round
+        @click="handlePayment"
+      />
+    </div>
   </div>
 </template>
 

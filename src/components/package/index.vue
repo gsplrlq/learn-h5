@@ -22,6 +22,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Card, Tag } from "vant";
+import { useRouter } from "vue-router";
 
 interface Package {
   imageUrl: string;
@@ -54,6 +55,10 @@ export default defineComponent({
       })
     }
   },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
   methods: {
     buyPackage() {
       // 购买逻辑
@@ -61,6 +66,7 @@ export default defineComponent({
     },
     goToPackage(packageId: number) {
       // 跳转到套餐详情页的逻辑
+      this.router.push({ path: `/package/${packageId}` });
       console.log(`跳转到套餐详情页: ${packageId}`);
     }
   }

@@ -33,7 +33,7 @@
 
     <van-tabs v-model="activeTab" class="pb-12" sticky>
       <van-tab title="简介">
-        <div class="m-2" v-html="course.courseContent" />
+        <div v-richText="course.courseContent" class="m-2" />
       </van-tab>
       <van-tab title="章节">
         <van-collapse ref="collapse" v-model="activeNames">

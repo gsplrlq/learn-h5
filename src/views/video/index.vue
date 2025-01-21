@@ -57,7 +57,9 @@ import {
   getLessonDetail,
   getLessonChapter,
   getVideoAuth,
-  createStudyHistory
+  createStudyHistory,
+  createEvaluation,
+  updateEvaluation
 } from "@/api/lesson";
 import { useRoute, useRouter } from "vue-router";
 import QuestionList from "../course/question.vue";
@@ -104,6 +106,7 @@ export default defineComponent({
     };
 
     const createPlayer = () => {
+      console.log(11111);
       player.value = new Aliplayer(
         {
           license: {
@@ -115,7 +118,7 @@ export default defineComponent({
           playauth: lessonChapter.value.playauth,
           width: "100%",
           height: "260px",
-          autoplay: true,
+          autoplay: false,
           isLive: false,
           rePlay: false,
           playsinline: true,
@@ -125,14 +128,20 @@ export default defineComponent({
         },
         player => {
           player.on("ended", () => {
+            console.log("ended");
             clearTimeout(timer.value);
 
             const currentIndex = videoList.value.findIndex(
-              item => item.videoId === route.params.videoId
+              item =>
+                item.videoId === route.params.videoId &&
+                lessonChapter.value.id === item.id
             );
             const nextVideo = videoList.value[currentIndex + 1];
             if (nextVideo) {
               update(nextVideo);
+            } else {
+              // 满意度调查
+              createEvaluation({ courseId: route.params.courseId });
             }
           });
 
@@ -141,6 +150,7 @@ export default defineComponent({
           });
 
           player.on("play", () => {
+            console.log("play");
             startTimer();
           });
 

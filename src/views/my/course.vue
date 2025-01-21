@@ -41,7 +41,9 @@
           </van-card>
         </div>
 
-        <div v-if="course.length === 0" class="empty-placeholder">暂无课程</div>
+        <div v-if="course.length === 0" class="empty-placeholder p-4">
+          暂无课程
+        </div>
       </van-tab>
     </van-tabs>
   </div>

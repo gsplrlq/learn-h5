@@ -131,6 +131,32 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: "订单详情"
         }
+      },
+
+      {
+        path: "package/:id",
+        name: "Package",
+        component: () => import("@/views/package/index.vue"),
+        meta: {
+          title: "套餐详情"
+        }
+      },
+
+      {
+        path: "exam/:id",
+        name: "Exam",
+        component: () => import("@/views/exam/index.vue"),
+        meta: {
+          title: "考试"
+        }
+      },
+      {
+        path: "exam/detail/:id",
+        name: "ExamDetail",
+        component: () => import("@/views/exam/detail.vue"),
+        meta: {
+          title: "考试详情"
+        }
       }
     ]
   }

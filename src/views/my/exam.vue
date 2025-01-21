@@ -27,6 +27,7 @@
 <script>
 import { ref } from "vue";
 import { getUserExam } from "@/api/user"; // Adjust the import according to your project structure
+import { useRouter } from "vue-router";
 
 export default {
   name: "ExamList",
@@ -35,6 +36,7 @@ export default {
     const loading = ref(false);
     const finished = ref(false);
     const page = ref(0);
+    const router = useRouter();
 
     const fetchExams = async () => {
       try {
@@ -69,8 +71,7 @@ export default {
     };
     const viewExam = examId => {
       // Assuming you are using Vue Router
-      const router = useRouter();
-      // router.push({ name: 'ExamDetail', params: { id: examId } });
+      router.push({ name: "ExamDetail", params: { id: examId } });
     };
 
     return {
@@ -78,7 +79,8 @@ export default {
       loading,
       finished,
       // onRefresh,
-      onLoad
+      onLoad,
+      viewExam
     };
   }
 };

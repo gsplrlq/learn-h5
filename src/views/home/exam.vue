@@ -24,11 +24,20 @@
               所属套餐: {{ exam.trainingPackageName }}
             </div>
             <van-button
+              v-if="exam.examFlag == 'yes'"
               type="primary"
               size="small"
               style="float: right"
               text="开始考试"
               @click="startExam(exam.id)"
+            />
+            <van-button
+              v-else
+              type="default"
+              size="small"
+              style="float: right"
+              disabled
+              text="无法考试"
             />
           </template>
         </van-cell>
@@ -104,6 +113,7 @@ export default defineComponent({
 
     const startExam = (examId: number) => {
       // Implement your start exam logic here
+      router.push(`/exam/${examId}`);
       console.log(`Starting exam with ID: ${examId}`);
     };
 

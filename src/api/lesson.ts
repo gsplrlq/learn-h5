@@ -52,6 +52,22 @@ export function createStudyHistory(data: object): Promise<any> {
   });
 }
 
+// 满意度测评
+export function createEvaluation(data: object): Promise<any> {
+  return http.request({
+    url: "/client/satisfactionEvaluation/create",
+    method: "post",
+    data
+  });
+}
+export function updateEvaluation(data: object): Promise<any> {
+  return http.request({
+    url: "/client/satisfactionEvaluation/update",
+    method: "post",
+    data
+  });
+}
+
 // 课程问答
 export function getLessonQa(data: object): Promise<any> {
   return http.request({
@@ -111,7 +127,7 @@ export function getTrainList(data: object): Promise<any> {
     data
   });
 }
-export function getTrainDetail(id: string): Promise<any> {
+export function getTrainDetail(id: any): Promise<any> {
   return http.request({
     url: `/public/client/trainingPackage/details/${id}`,
     method: "get"

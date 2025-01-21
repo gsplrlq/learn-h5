@@ -24,7 +24,7 @@ export function putExam(data: object): Promise<any> {
   });
 }
 
-export function getExamany(id: string): Promise<any> {
+export function getExamResult(id: string): Promise<any> {
   return http.request({
     url: `/client/userExam/details/${id}`,
     method: "get"
