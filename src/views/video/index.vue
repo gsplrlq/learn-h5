@@ -46,6 +46,25 @@
         <review-list :course="course" />
       </van-tab>
     </van-tabs>
+
+    <van-popup
+      v-model:show="showPopup"
+      position="bottom"
+      style="background-color: var(--van-gray-1)"
+    >
+      <div class="review-popup">
+        <div class="content-section mb-2 flex">
+          <span class="mr-4">请对本课程进行评价</span>
+          <van-radio-group v-model="rating">
+            <van-radio class="mb-2" name="一般">一般</van-radio>
+            <van-radio class="mb-2" name="满意">满意</van-radio>
+            <van-radio class="mb-2" name="非常满意">非常满意</van-radio>
+          </van-radio-group>
+        </div>
+        <van-divider />
+        <van-button type="primary" @click="onConfirm">提交</van-button>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -65,6 +84,7 @@ import { useRoute, useRouter } from "vue-router";
 import QuestionList from "../course/question.vue";
 import NoteList from "../course/note.vue";
 import ReviewList from "../course/review.vue";
+import { showToast } from "vant";
 
 export default defineComponent({
   name: "VideoPlayer",
@@ -99,6 +119,10 @@ export default defineComponent({
     const videoList = ref([]);
     const lessonChapter = ref(null);
     const timer = ref(null);
+    const beginTimer = ref(false);
+    const beginEvaluation = ref(false);
+    const showPopup = ref(false);
+    const rating = ref("满意");
 
     const getCourseDetail = async () => {
       const data = await getLessonDetail(route.params.courseId);
@@ -106,7 +130,6 @@ export default defineComponent({
     };
 
     const createPlayer = () => {
-      console.log(11111);
       player.value = new Aliplayer(
         {
           license: {
@@ -141,17 +164,24 @@ export default defineComponent({
               update(nextVideo);
             } else {
               // 满意度调查
-              createEvaluation({ courseId: route.params.courseId });
+              if (!beginEvaluation.value) {
+                createEvaluation({ courseId: route.params.courseId });
+
+                showPopup.value = true;
+              }
+              beginEvaluation.value = true;
             }
           });
 
           player.on("ready", () => {
+            console.log("ready");
             player.seek(lessonChapter.value.progress);
           });
 
           player.on("play", () => {
             console.log("play");
             startTimer();
+            beginTimer.value = true;
           });
 
           player.on("error", () => {
@@ -186,6 +216,15 @@ export default defineComponent({
       );
     };
 
+    const onConfirm = async () => {
+      await updateEvaluation({
+        courseId: route.params.courseId,
+        content: rating.value
+      });
+      showPopup.value = false;
+      showToast("提交成功");
+    };
+
     const update = video => {
       lessonChapter.value = video;
       player.value.dispose();
@@ -204,6 +243,8 @@ export default defineComponent({
 
     const startTimer = () => {
       if (!player.value) return;
+      // 保证触发一次
+      if (beginTimer.value) return;
 
       timer.value = setTimeout(() => {
         createStudyHistory({
@@ -248,6 +289,7 @@ export default defineComponent({
     //   }
     // );
     onUnmounted(() => {
+      debugger;
       if (timer.value) {
         clearTimeout(timer.value);
       }
@@ -259,7 +301,10 @@ export default defineComponent({
     return {
       activeTab,
       course,
-      lessonChapter
+      lessonChapter,
+      showPopup,
+      rating,
+      onConfirm
     };
   }
 });
@@ -269,5 +314,9 @@ export default defineComponent({
 .video-player {
   width: 100%;
   height: 100%;
+}
+
+.review-popup {
+  padding: 16px;
 }
 </style>
