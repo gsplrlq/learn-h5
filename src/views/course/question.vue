@@ -4,12 +4,10 @@
       <van-button type="primary" @click="question()">我要提问</van-button>
     </div>
 
-    <van-list
-      v-model:loading="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
+    <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
+      <div v-if="!qaList.length" class="text-center text-gray-500 py-4">
+        暂无内容
+      </div>
       <van-cell v-for="item in qaList" :key="item.id">
         <template #icon>
           <van-image

@@ -4,12 +4,10 @@
       <van-button type="primary" @click="question()">添加笔记</van-button>
     </div>
 
-    <van-list
-      v-model:loading="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
+    <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
+      <div v-if="!noteList.length" class="text-center text-gray-500 py-4">
+        暂无内容
+      </div>
       <van-cell v-for="item in noteList" :key="item.id">
         <template #icon>
           <van-image

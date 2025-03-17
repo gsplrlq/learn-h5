@@ -4,7 +4,7 @@
       <img src="@/assets/images/logo.png" alt="Logo" />
       <img src="@/assets/images/logo_text.png" alt="Logo" />
     </div>
-    <van-tabs v-model:active="active">
+    <van-tabs v-model:active="active" swipeable>
       <van-tab
         v-for="m in menu"
         :key="m.name"

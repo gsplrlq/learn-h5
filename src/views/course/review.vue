@@ -42,6 +42,9 @@
     </van-popup>
 
     <div class="review-list">
+      <div v-if="!reviews.length" class="text-center text-gray-500 py-4">
+        暂无内容
+      </div>
       <div
         v-for="review in reviews"
         :key="review.id"
