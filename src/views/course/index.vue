@@ -87,7 +87,7 @@
         v-if="course.courseType === 2 && !course.bought"
         type="danger"
         text="立即购买"
-        @click="router.push(`/order/confirm/${course.id}/1`)"
+        @click="toPay"
       />
       <van-action-bar-button
         v-else
@@ -106,6 +106,7 @@ import { getLessonDetail, getLessonChapter } from "@/api/lesson";
 import QuestionList from "./question.vue";
 import NoteList from "./note.vue";
 import ReviewList from "./review.vue";
+import { showToast } from "vant";
 
 const route = useRoute();
 const router = useRouter();
@@ -141,6 +142,11 @@ const chapterList = ref([
     ]
   }
 ]);
+
+const toPay = () => {
+  showToast("支付功能暂未开放...");
+  // router.push(`/order/confirm/${course.value.id}/2`);
+};
 
 onMounted(async () => {
   const courseId: any = route.params.id;

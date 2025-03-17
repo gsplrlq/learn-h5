@@ -17,13 +17,17 @@
             <div>
               总分: {{ exam.totalScores }} | 及格分: {{ exam.passScores }}
             </div>
-            <div
-              v-if="exam.examType == 'trainingPackage'"
-              class="trainingPackage"
-            >
-              所属套餐: {{ exam.trainingPackageName }}
+            <div v-if="exam.courseName" class="trainingPackage">
+              所属课程: {{ exam.courseName }}
             </div>
             <van-button
+              type="default"
+              size="small"
+              style="float: right"
+              disabled
+              text="无法考试"
+            />
+            <!-- <van-button
               v-if="exam.examFlag == 'yes'"
               type="primary"
               size="small"
@@ -38,9 +42,12 @@
               style="float: right"
               disabled
               text="无法考试"
-            />
+            /> -->
           </template>
         </van-cell>
+        <template v-if="exams.length === 0">
+          <van-empty description="暂无数据" />
+        </template>
       </van-list>
     </div>
     <van-empty v-else description="请先登录" />
@@ -94,11 +101,11 @@ export default defineComponent({
           }
         });
         if (page.value === 1) {
-          exams.value = data;
+          exams.value = data.records;
         } else {
-          exams.value = exams.value.concat(data);
+          exams.value = exams.value.concat(data.records);
         }
-        finished.value = data.length < 10;
+        finished.value = data.records.length < 10;
       } catch (error) {
         console.error("Failed to fetch exams:", error);
       } finally {

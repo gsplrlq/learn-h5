@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import { defineComponent, onMounted, onUnmounted, ref, nextTick } from "vue";
 import Aliplayer from "aliyun-aliplayer";
 import "aliyun-aliplayer/build/skins/default/aliplayer-min.css";
 import {
@@ -85,6 +85,7 @@ import QuestionList from "../course/question.vue";
 import NoteList from "../course/note.vue";
 import ReviewList from "../course/review.vue";
 import { showToast } from "vant";
+import { showFailToast } from "vant";
 
 export default defineComponent({
   name: "VideoPlayer",
@@ -98,6 +99,7 @@ export default defineComponent({
     const router = useRouter();
     interface Course {
       courseType: number;
+      classId: number;
       trainingPackage: boolean;
       imgUrl: string;
       title: string;
@@ -121,6 +123,7 @@ export default defineComponent({
     const timer = ref(null);
     const beginTimer = ref(false);
     const beginEvaluation = ref(false);
+    const fSeek = ref(false);
     const showPopup = ref(false);
     const rating = ref("满意");
 
@@ -162,25 +165,39 @@ export default defineComponent({
             const nextVideo = videoList.value[currentIndex + 1];
             if (nextVideo) {
               update(nextVideo);
-            } else {
-              // 满意度调查
-              if (!beginEvaluation.value) {
-                createEvaluation({ courseId: route.params.courseId });
-
-                showPopup.value = true;
-              }
-              beginEvaluation.value = true;
             }
+            // else {
+            //   // 满意度调查
+            //   if (!beginEvaluation.value) {
+            //     createEvaluation({ courseId: route.params.courseId });
+
+            //     showPopup.value = true;
+            //   }
+            //   beginEvaluation.value = true;
+            // }
+          });
+
+          player.on("canplay", function () {
+            console.log("canplay", lessonChapter.value.progress);
+            // player.seek(lessonChapter.value.progress);
+            // nextTick(() => {
+            //   fSeek.value = true;
+            // });
           });
 
           player.on("ready", () => {
-            console.log("ready");
-            player.seek(lessonChapter.value.progress);
+            console.log("ready", lessonChapter.value.progress);
+            // player.seek(lessonChapter.value.progress);
           });
 
           player.on("play", () => {
+            if (!fSeek.value) {
+              player.seek(lessonChapter.value.progress);
+              fSeek.value = true;
+            }
+
             console.log("play");
-            startTimer();
+            startTimer(beginTimer.value);
             beginTimer.value = true;
           });
 
@@ -189,29 +206,31 @@ export default defineComponent({
           });
 
           // 套餐付费课静止拖动
-          if (course.value.courseType === 2 && course.value.trainingPackage) {
-            let lastTime = 0;
-            player.on("timeupdate", () => {
-              if (!player.tag.seeking) {
-                // 更新最近一次的播放位置
-                lastTime = player.getCurrentTime();
-              }
-            });
+          // if (course.value.courseType === 2 && course.value.trainingPackage) {
+          // if (fSeek.value) {
+          //   let lastTime = 0;
+          //   player.on("timeupdate", () => {
+          //     if (!player.tag.seeking) {
+          //       // 更新最近一次的播放位置
+          //       lastTime = player.getCurrentTime();
+          //     }
+          //   });
 
-            player.on("seeking", () => {
-              var delta = player.getCurrentTime() - lastTime;
-              if (Math.abs(delta) > 0.01) {
-                console.log("Seeking is disabled");
-                // 判断为拖动，自动跳回原来的位置
-                // (iOS QQ浏览器无效，因为QQ浏览器不支持获取和修改currentTime属性)
-                player.tag.currentTime = lastTime;
-              }
-            });
+          //   player.on("seeking", () => {
+          //     var delta = player.getCurrentTime() - lastTime;
 
-            player.on("ended", () => {
-              lastTime = 0;
-            });
-          }
+          //     if (Math.abs(delta) > 0.01) {
+          //       console.log("Seeking is disabled");
+          //       // 判断为拖动，自动跳回原来的位置
+          //       // (iOS QQ浏览器无效，因为QQ浏览器不支持获取和修改currentTime属性)
+          //       player.tag.currentTime = lastTime;
+          //     }
+          //   });
+
+          //   player.on("ended", () => {
+          //     lastTime = 0;
+          //   });
+          // }
         }
       );
     };
@@ -241,23 +260,28 @@ export default defineComponent({
       createPlayer();
     };
 
-    const startTimer = () => {
+    const startTimer = (flag: boolean) => {
       if (!player.value) return;
       // 保证触发一次
-      if (beginTimer.value) return;
+      if (flag || !player.value.getCurrentTime()) return;
 
       timer.value = setTimeout(() => {
         createStudyHistory({
-          courseId: route.params.courseId,
+          courseId: Number(route.params.courseId),
           chapterId: lessonChapter.value.id,
           fileId: lessonChapter.value.fileId,
-          progress: player.value.getCurrentTime()
+          progress: player.value.getCurrentTime(),
+          classId: course.value.classId || null
         });
-        startTimer();
+        startTimer(flag);
       }, 1000 * 5);
     };
 
     onMounted(async () => {
+      if (!route.params.videoId) {
+        return showFailToast("视频异常，无法播放，请联系管理员");
+      }
+
       getCourseDetail();
 
       const data = await getLessonChapter({
@@ -271,25 +295,7 @@ export default defineComponent({
       getVideo();
     });
 
-    // watch(
-    //   () => route.params.videoId,
-    //   async (newVideoId, oldVideoId) => {
-    //     if (newVideoId !== oldVideoId) {
-    //       if (timer.value) {
-    //         clearTimeout(timer.value);
-    //       }
-    //       if (player.value) {
-    //         player.value.dispose();
-    //       }
-    //       lessonChapter.value = videoList.value.find(
-    //         item => item.videoId === newVideoId
-    //       );
-    //       getVideo();
-    //     }
-    //   }
-    // );
     onUnmounted(() => {
-      debugger;
       if (timer.value) {
         clearTimeout(timer.value);
       }

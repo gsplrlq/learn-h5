@@ -63,7 +63,7 @@
         v-if="!packageData.bought"
         type="danger"
         text="立即购买"
-        @click="router.push(`/order/confirm/${packageData.id}/2`)"
+        @click="toPay"
       />
       <van-action-bar-button v-else type="danger" disabled text="已购买" />
     </van-action-bar>
@@ -74,6 +74,7 @@
 import { ref, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getTrainDetail } from "@/api/lesson";
+import { showToast } from "vant";
 
 const route = useRoute();
 const router = useRouter();
@@ -104,6 +105,11 @@ let packageData = ref<PackageData>({
   id: 0
 });
 const activeTab = ref(0);
+
+const toPay = () => {
+  showToast("支付功能暂未开放...");
+  // router.push(`/order/confirm/${packageData.value.id}/2`);
+};
 
 onMounted(async () => {
   const packageId: any = route.params.id;

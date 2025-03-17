@@ -3,7 +3,7 @@ import { http } from "@/utils/http";
 // 在线考试
 export function getExamList(data: object): Promise<any> {
   return http.request({
-    url: "/client/examInfo/userExamList",
+    url: "/client/examInfo/page",
     method: "post",
     data
   });

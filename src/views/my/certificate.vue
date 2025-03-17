@@ -3,7 +3,7 @@
     <ul>
       <li v-for="certificate in certificates" :key="certificate.id">
         <h2>{{ certificate.certificateName }}</h2>
-        <p>考试名称: {{ certificate.examName }}</p>
+        <p>课程名称: {{ certificate.courseName }}</p>
         <p>获取日期: {{ certificate.obtainDate }}</p>
       </li>
     </ul>
