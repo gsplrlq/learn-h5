@@ -70,6 +70,12 @@ class Http {
         let message = "";
         // HTTP 状态码
         const status = error.response?.status;
+
+        if (status === 401) {
+          useAuthStore().logout();
+          return Promise.reject(error);
+        }
+
         switch (status) {
           case 400:
             message = "请求错误";
@@ -106,10 +112,6 @@ class Http {
             break;
           default:
             message = "网络连接故障";
-        }
-
-        if (status === 401) {
-          useAuthStore().logout();
         }
 
         showFailToast(message);

@@ -14,8 +14,6 @@
         <van-tag plain class="mr-2">时长: {{ course.durationStr }}</van-tag>
         <van-tag plain class="mr-2">人数: {{ course.studyCount }} 人</van-tag>
         <van-tag plain>评分: {{ course.score }}</van-tag>
-      </template>
-      <template #footer>
         <div v-if="course.teacherInfo" class="teacher-info flex text-left mt-2">
           <van-image
             round
@@ -62,7 +60,9 @@
           </van-radio-group>
         </div>
         <van-divider />
-        <van-button type="primary" @click="onConfirm">提交</van-button>
+        <div class="flex">
+          <van-button type="primary" @click="onConfirm">提交</van-button>
+        </div>
       </div>
     </van-popup>
   </div>
@@ -78,7 +78,8 @@ import {
   getVideoAuth,
   createStudyHistory,
   createEvaluation,
-  updateEvaluation
+  updateEvaluation,
+  joinClass
 } from "@/api/lesson";
 import { useRoute, useRouter } from "vue-router";
 import QuestionList from "../course/question.vue";
@@ -126,10 +127,23 @@ export default defineComponent({
     const fSeek = ref(false);
     const showPopup = ref(false);
     const rating = ref("满意");
+    const fEnd = ref(false);
 
-    const getCourseDetail = async () => {
+    const getCourseDetail = async (classId: number) => {
       const data = await getLessonDetail(route.params.courseId);
       course.value = data;
+      course.value.classId = classId;
+      course.value.hasStudy = true;
+
+      const data2 = await getLessonChapter({
+        courseId: route.params.courseId
+      });
+      videoList.value = [...data2.map(item => item.chapterList).flat()];
+      lessonChapter.value = videoList.value.find(
+        item => item.videoId === route.params.videoId
+      );
+
+      getVideo();
     };
 
     const createPlayer = () => {
@@ -154,6 +168,7 @@ export default defineComponent({
         },
         player => {
           player.on("ended", () => {
+            lastTime = 0;
             console.log("ended");
             clearTimeout(timer.value);
 
@@ -163,8 +178,9 @@ export default defineComponent({
                 lessonChapter.value.id === item.id
             );
             const nextVideo = videoList.value[currentIndex + 1];
-            if (nextVideo) {
+            if (nextVideo && !fEnd.value) {
               update(nextVideo);
+              fEnd.value = true;
             }
             // else {
             //   // 满意度调查
@@ -193,7 +209,10 @@ export default defineComponent({
           player.on("play", () => {
             if (!fSeek.value) {
               player.seek(lessonChapter.value.progress);
-              fSeek.value = true;
+
+              setTimeout(() => {
+                fSeek.value = true;
+              }, 1000);
             }
 
             console.log("play");
@@ -208,28 +227,25 @@ export default defineComponent({
           // 套餐付费课静止拖动
           // if (course.value.courseType === 2 && course.value.trainingPackage) {
           // if (fSeek.value) {
-          //   let lastTime = 0;
-          //   player.on("timeupdate", () => {
-          //     if (!player.tag.seeking) {
-          //       // 更新最近一次的播放位置
-          //       lastTime = player.getCurrentTime();
-          //     }
-          //   });
+          let lastTime = 0;
+          player.on("timeupdate", () => {
+            if (!player.tag.seeking) {
+              // 更新最近一次的播放位置
+              lastTime = player.getCurrentTime();
+            }
+          });
 
-          //   player.on("seeking", () => {
-          //     var delta = player.getCurrentTime() - lastTime;
+          player.on("seeking", () => {
+            var delta = player.getCurrentTime() - lastTime;
 
-          //     if (Math.abs(delta) > 0.01) {
-          //       console.log("Seeking is disabled");
-          //       // 判断为拖动，自动跳回原来的位置
-          //       // (iOS QQ浏览器无效，因为QQ浏览器不支持获取和修改currentTime属性)
-          //       player.tag.currentTime = lastTime;
-          //     }
-          //   });
+            if (Math.abs(delta) > 0.01 && fSeek.value) {
+              console.log("Seeking is disabled");
+              // 判断为拖动，自动跳回原来的位置
+              // (iOS QQ浏览器无效，因为QQ浏览器不支持获取和修改currentTime属性)
+              player.tag.currentTime = lastTime;
+            }
+          });
 
-          //   player.on("ended", () => {
-          //     lastTime = 0;
-          //   });
           // }
         }
       );
@@ -246,9 +262,15 @@ export default defineComponent({
 
     const update = video => {
       lessonChapter.value = video;
+      console.log("update", video.videoId);
+
       player.value.dispose();
-      router.push({ path: `/video/${route.params.courseId}/${video.videoId}` });
-      getVideo();
+      nextTick(() => {
+        router.push({
+          path: `/video/${route.params.courseId}/${video.videoId}`
+        });
+        getVideo();
+      });
     };
 
     const getVideo = async () => {
@@ -263,7 +285,7 @@ export default defineComponent({
     const startTimer = (flag: boolean) => {
       if (!player.value) return;
       // 保证触发一次
-      if (flag || !player.value.getCurrentTime()) return;
+      if (flag) return;
 
       timer.value = setTimeout(() => {
         createStudyHistory({
@@ -277,22 +299,18 @@ export default defineComponent({
       }, 1000 * 5);
     };
 
+    const onJoinClass = () => {
+      joinClass({ courseId: route.params.courseId }).then(res => {
+        getCourseDetail(res.data);
+      });
+    };
+
     onMounted(async () => {
       if (!route.params.videoId) {
         return showFailToast("视频异常，无法播放，请联系管理员");
       }
 
-      getCourseDetail();
-
-      const data = await getLessonChapter({
-        courseId: route.params.courseId
-      });
-      videoList.value = [...data.map(item => item.chapterList).flat()];
-      lessonChapter.value = videoList.value.find(
-        item => item.videoId === route.params.videoId
-      );
-
-      getVideo();
+      onJoinClass();
     });
 
     onUnmounted(() => {
@@ -310,6 +328,7 @@ export default defineComponent({
       lessonChapter,
       showPopup,
       rating,
+      fSeek,
       onConfirm
     };
   }

@@ -1,20 +1,29 @@
 <template>
-  <div class="certificate-list">
-    <ul>
-      <li v-for="certificate in certificates" :key="certificate.id">
-        <h2>{{ certificate.certificateName }}</h2>
-        <p>课程名称: {{ certificate.courseName }}</p>
-        <p>获取日期: {{ certificate.obtainDate }}</p>
-      </li>
-    </ul>
-    <div v-if="loading" class="loading">加载中...</div>
-    <div v-else-if="!certificates.length" class="no-data">暂无证书信息</div>
-  </div>
+  <van-list v-model:loading="loading" finished finished-text="没有更多了">
+    <van-cell-group>
+      <van-cell
+        v-for="certificate in certificates"
+        :key="certificate.id"
+        :title="certificate.certificateName"
+        :label="`课程: ${certificate.courseName} 获取日期: ${certificate.obtainDate}`"
+      >
+        <template #right-icon>
+          <van-button
+            type="primary"
+            size="small"
+            @click="viewcertificate(certificate.certificatePdf)"
+            >查看证书</van-button
+          >
+        </template>
+      </van-cell>
+    </van-cell-group>
+  </van-list>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, onMounted } from "vue";
 import { getUserCertificateInfo } from "@/api/user";
+import { showToast } from "vant";
 
 export default defineComponent({
   setup() {
@@ -57,41 +66,29 @@ export default defineComponent({
 
     window.addEventListener("scroll", handleScroll);
 
+    const viewcertificate = (certificatePdf: string) => {
+      // For mobile devices, open the PDF in a new tab
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        window.open(certificatePdf, "_blank");
+      } else {
+        // For desktop, download the PDF
+        const link = document.createElement("a");
+        link.href = certificatePdf;
+        link.download = certificatePdf;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      showToast("查看证书, 请下载查看");
+    };
     return {
       certificates,
-      loading
+      loading,
+      viewcertificate
     };
   }
 });
 </script>
 
-<style scoped>
-.certificate-list {
-  padding: 20px;
-}
-
-.certificate-list h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.certificate-list ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.certificate-list li {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.certificate-list h2 {
-  margin: 0;
-  font-size: 20px;
-}
-
-.certificate-list p {
-  margin: 5px 0;
-}
-</style>
+<style scoped></style>

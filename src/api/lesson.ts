@@ -25,6 +25,14 @@ export function getLessonDetail(id: any): Promise<any> {
   });
 }
 
+export function joinClass(data: object): Promise<any> {
+  return http.request({
+    url: "/client/classUserInfo/joinClass",
+    method: "post",
+    data
+  });
+}
+
 // 课程章节
 export function getLessonChapter(data: object): Promise<any> {
   return http.request({

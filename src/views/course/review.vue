@@ -37,7 +37,9 @@
             show-word-limit
           />
         </div>
-        <van-button type="primary" @click="submitReview">提交</van-button>
+        <div class="flex justify-end">
+          <van-button type="primary" @click="submitReview">提交</van-button>
+        </div>
       </div>
     </van-popup>
 
@@ -93,6 +95,19 @@ export default defineComponent({
       showPopup.value = true;
     };
 
+    const getData = async () => {
+      const data = await getLessoEvaluate({
+        courseId: props.course.id,
+        page: {
+          current: 1,
+          size: -1
+        }
+      });
+      reviews.value = data.page.records;
+      totalScore.value = data.score;
+      userEvaluated.value = data.userEvaluated;
+    };
+
     const submitReview = () => {
       if (!content.value || score.value === 0) {
         showToast("请填写内容并评分");
@@ -107,6 +122,7 @@ export default defineComponent({
         showPopup.value = false;
         score.value = 0;
         showToast("评价提交成功");
+        getData();
       });
     };
 
@@ -115,16 +131,7 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      const data = await getLessoEvaluate({
-        courseId: props.course.id,
-        page: {
-          current: 1,
-          size: -1
-        }
-      });
-      reviews.value = data.page.records;
-      totalScore.value = data.score;
-      userEvaluated.value = data.userEvaluated;
+      getData();
     });
 
     return {

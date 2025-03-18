@@ -13,8 +13,6 @@
         <van-tag plain class="mr-2">时长: {{ course.durationStr }}</van-tag>
         <van-tag plain class="mr-2">人数: {{ course.studyCount }} 人</van-tag>
         <van-tag plain>评分: {{ course.score }}</van-tag>
-      </template>
-      <template #footer>
         <div v-if="course.teacherInfo" class="teacher-info flex text-left mt-2">
           <van-image
             round
