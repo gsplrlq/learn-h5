@@ -266,10 +266,14 @@ export default defineComponent({
 
       player.value.dispose();
       nextTick(() => {
-        router.push({
-          path: `/video/${route.params.courseId}/${video.videoId}`
-        });
-        getVideo();
+        router
+          .push({
+            path: `/video/${route.params.courseId}/${video.videoId}`
+          })
+          .then(() => {
+            // 重新加载页面
+            window.location.reload();
+          });
       });
     };
 
