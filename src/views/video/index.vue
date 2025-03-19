@@ -131,9 +131,9 @@ export default defineComponent({
 
     const getCourseDetail = async (classId: number) => {
       const data = await getLessonDetail(route.params.courseId);
+      data.hasStudy = true;
+      data.classId = classId;
       course.value = data;
-      course.value.classId = classId;
-      course.value.hasStudy = true;
 
       const data2 = await getLessonChapter({
         courseId: route.params.courseId
@@ -304,8 +304,8 @@ export default defineComponent({
     };
 
     const onJoinClass = () => {
-      joinClass({ courseId: route.params.courseId }).then(res => {
-        getCourseDetail(res.data);
+      joinClass({ courseId: route.params.courseId }).then(data => {
+        getCourseDetail(data);
       });
     };
 

@@ -20,6 +20,9 @@
             @click="router.push(`/course/${c.id}`)"
           >
             <template #desc>
+              <div class="text-l text-gray-400">
+                机构：{{ c.institutionName }}
+              </div>
               <div>
                 {{ `已学 ${c.percent}% | 用时: ${getTime(c.progress)}` }}
               </div>
@@ -69,9 +72,11 @@ export default {
       { id: 3, title: "付费课", status: 2 }
     ];
     const course = ref([]);
+
     const getTime = time => {
-      const h = (time / 3600).toFixed(0);
-      return `${h}小时`;
+      const hours = Math.floor(time / 3600);
+      const minutes = Math.floor((time % 3600) / 60);
+      return `${hours}小时${minutes}分钟`;
     };
 
     const onTabClick = tab => {
