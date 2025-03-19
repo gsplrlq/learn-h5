@@ -170,6 +170,7 @@ export default defineComponent({
           player.on("ended", () => {
             console.log("ended");
             clearTimeout(timer.value);
+            createHistory();
 
             const currentIndex = videoList.value.findIndex(
               item =>
@@ -215,6 +216,7 @@ export default defineComponent({
             }
 
             console.log("play");
+            createHistory();
             startTimer(beginTimer.value);
             beginTimer.value = true;
           });
@@ -294,15 +296,18 @@ export default defineComponent({
       if (flag) return;
 
       timer.value = setTimeout(() => {
-        createStudyHistory({
-          courseId: Number(route.params.courseId),
-          chapterId: lessonChapter.value.id,
-          fileId: lessonChapter.value.fileId,
-          progress: player.value.getCurrentTime(),
-          classId: course.value.classId || null
-        });
+        createHistory();
         startTimer(flag);
       }, 1000 * 5);
+    };
+    const createHistory = () => {
+      createStudyHistory({
+        courseId: Number(route.params.courseId),
+        chapterId: lessonChapter.value.id,
+        fileId: lessonChapter.value.fileId,
+        progress: player.value.getCurrentTime(),
+        classId: course.value.classId || null
+      });
     };
 
     const onJoinClass = () => {
