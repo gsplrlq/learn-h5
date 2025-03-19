@@ -168,7 +168,6 @@ export default defineComponent({
         },
         player => {
           player.on("ended", () => {
-            lastTime = 0;
             console.log("ended");
             clearTimeout(timer.value);
 
@@ -207,7 +206,7 @@ export default defineComponent({
           });
 
           player.on("play", () => {
-            if (!fSeek.value) {
+            if (!fSeek.value && lessonChapter.value.percent < 95) {
               player.seek(lessonChapter.value.progress);
 
               setTimeout(() => {
@@ -226,27 +225,30 @@ export default defineComponent({
 
           // 套餐付费课静止拖动
           // if (course.value.courseType === 2 && course.value.trainingPackage) {
-          // if (fSeek.value) {
-          let lastTime = 0;
-          player.on("timeupdate", () => {
-            if (!player.tag.seeking) {
-              // 更新最近一次的播放位置
-              lastTime = player.getCurrentTime();
-            }
-          });
+          if (lessonChapter.value.percent < 95) {
+            let lastTime = 0;
+            player.on("timeupdate", () => {
+              if (!player.tag.seeking) {
+                // 更新最近一次的播放位置
+                lastTime = player.getCurrentTime();
+              }
+            });
 
-          player.on("seeking", () => {
-            var delta = player.getCurrentTime() - lastTime;
+            player.on("seeking", () => {
+              var delta = player.getCurrentTime() - lastTime;
 
-            if (Math.abs(delta) > 0.01 && fSeek.value) {
-              console.log("Seeking is disabled");
-              // 判断为拖动，自动跳回原来的位置
-              // (iOS QQ浏览器无效，因为QQ浏览器不支持获取和修改currentTime属性)
-              player.tag.currentTime = lastTime;
-            }
-          });
+              if (Math.abs(delta) > 0.01 && fSeek.value) {
+                console.log("Seeking is disabled");
+                // 判断为拖动，自动跳回原来的位置
+                // (iOS QQ浏览器无效，因为QQ浏览器不支持获取和修改currentTime属性)
+                player.tag.currentTime = lastTime;
+              }
+            });
 
-          // }
+            player.on("end", () => {
+              lastTime = 0;
+            });
+          }
         }
       );
     };

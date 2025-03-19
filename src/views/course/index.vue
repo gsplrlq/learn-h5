@@ -46,16 +46,17 @@
               :key="subItem.id"
               :title="subItem.title"
               :label="`时长: ${subItem.durationStr}`"
+              @click="chapterClick(subItem)"
             >
               <!-- @click="router.push(`/video/${course.id}/${subItem.videoId}`)" -->
               <template #right-icon>
                 <i-icon
-                  v-if="subItem.percent == 100"
+                  v-if="subItem.percent > 95"
                   icon="mdi-check-circle"
                   class="text-lg text-green-500"
                 />
                 <i-icon
-                  v-else-if="subItem.percent > 0 && subItem.percent < 100"
+                  v-else-if="subItem.percent > 0 && subItem.percent < 95"
                   icon="mdi-progress-clock"
                   class="text-lg text-green-500"
                 />
@@ -144,6 +145,12 @@ const chapterList = ref([
 const toPay = () => {
   showToast("支付功能暂未开放...");
   // router.push(`/order/confirm/${course.value.id}/2`);
+};
+
+const chapterClick = (item: any) => {
+  if (item.percent > 95) {
+    router.push(`/video/${course.value.id}/${item.videoId}`);
+  }
 };
 
 onMounted(async () => {
