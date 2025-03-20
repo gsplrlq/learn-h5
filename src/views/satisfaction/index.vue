@@ -22,9 +22,13 @@
                 v-model="evaluationForm[item.prop]"
                 @change="contentChange(evaluationForm[item.prop], item.prop2)"
               >
-                <van-radio v-for="r in ratingArr" :key="r" :name="r">{{
-                  r
-                }}</van-radio>
+                <van-radio
+                  v-for="r in ratingArr"
+                  :key="r"
+                  :name="r"
+                  class="mb-2"
+                  >{{ r }}</van-radio
+                >
               </van-radio-group>
             </template>
           </van-field>
@@ -36,6 +40,7 @@
             type="textarea"
             rows="2"
             autosize
+            :rules="rules[item.prop2]"
           />
         </div>
       </van-cell-group>
