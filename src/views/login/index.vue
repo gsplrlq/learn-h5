@@ -14,6 +14,7 @@ const isRegister = ref(false);
 const isCode = ref(false);
 const mobile = ref("");
 const code = ref("");
+const password = ref("");
 
 let totalSecond = ref(60);
 let second = ref(60);
@@ -73,7 +74,7 @@ const reset = () => {
           :rules="[{ required: true, message: '请填写手机号' }]"
         />
         <van-field
-          v-if="!isCode"
+          v-if="!isRegister && !isCode"
           v-model="code"
           type="password"
           name="code"
@@ -82,7 +83,16 @@ const reset = () => {
           :rules="[{ required: true, message: '请填写密码' }]"
         />
         <van-field
-          v-else
+          v-if="isRegister"
+          v-model="password"
+          type="password"
+          name="password"
+          label="密码"
+          placeholder="密码"
+          :rules="[{ required: true, message: '请填写密码' }]"
+        />
+        <van-field
+          v-if="isRegister || isCode"
           v-model="code"
           clearable
           name="code"
@@ -121,7 +131,6 @@ const reset = () => {
           class="text-center text-large text-red-500 p-6"
           @click="
             isRegister = true;
-            isCode = true;
             reset();
           "
         >
