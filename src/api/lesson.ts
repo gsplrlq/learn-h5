@@ -141,3 +141,36 @@ export function getTrainDetail(id: any): Promise<any> {
     method: "get"
   });
 }
+
+// 签到
+export function getSignIn(trainingCourseId: any): Promise<any> {
+  return http.request({
+    url: `/client/offlineTrainingCourse/detail/${trainingCourseId}`,
+    method: "get"
+  });
+}
+
+export function submitSignIn(data: object): Promise<any> {
+  return http.request({
+    url: "/client/offlineTrainingCourse/submit",
+    method: "post",
+    data
+  });
+}
+
+// 满意度测评
+export function submitEvaluation(data: object): Promise<any> {
+  return http.request({
+    url: "/client/offlineTrainingCourse/updateOfflineSatisfactionEvaluation",
+    method: "post",
+    data
+  });
+}
+
+export function validateEvaluation(data: object): Promise<any> {
+  return http.request({
+    url: "/client/offlineTrainingCourse/validate",
+    method: "post",
+    data
+  });
+}

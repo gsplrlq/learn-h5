@@ -159,6 +159,22 @@ const routes: Array<RouteRecordRaw> = [
         }
       }
     ]
+  },
+  {
+    path: "/sign-in/:id",
+    name: "signIn",
+    component: () => import("@/views/sign/index.vue"),
+    meta: {
+      title: "线下签到"
+    }
+  },
+  {
+    path: "/satisfaction/:id",
+    name: "satisfaction",
+    component: () => import("@/views/satisfaction/index.vue"),
+    meta: {
+      title: "满意度测评"
+    }
   }
 ];
 

@@ -142,6 +142,10 @@ export default defineComponent({
       lessonChapter.value = videoList.value.find(
         item => item.videoId === route.params.videoId
       );
+      if (!lessonChapter.value) {
+        showFailToast("视频异常，无法播放，请联系管理员");
+        return;
+      }
 
       getVideo();
     };
@@ -179,7 +183,10 @@ export default defineComponent({
             );
             const nextVideo = videoList.value[currentIndex + 1];
             if (nextVideo && !fEnd.value) {
-              update(nextVideo);
+              showToast("视频播放完成，即将跳转至下一章。");
+              setTimeout(() => {
+                update(nextVideo);
+              }, 2000);
               fEnd.value = true;
             }
             // else {
@@ -207,12 +214,12 @@ export default defineComponent({
           });
 
           player.on("play", () => {
-            if (!fSeek.value && lessonChapter.value.percent < 95) {
+            if (!fSeek.value) {
               player.seek(lessonChapter.value.progress);
 
               setTimeout(() => {
                 fSeek.value = true;
-              }, 1000);
+              }, 100);
             }
 
             console.log("play");
@@ -227,7 +234,8 @@ export default defineComponent({
 
           // 套餐付费课静止拖动
           // if (course.value.courseType === 2 && course.value.trainingPackage) {
-          if (lessonChapter.value.percent < 95) {
+          const f = false;
+          if (f && lessonChapter.value.percent < 95) {
             let lastTime = 0;
             player.on("timeupdate", () => {
               if (!player.tag.seeking) {

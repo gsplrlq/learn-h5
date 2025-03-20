@@ -148,7 +148,7 @@ const toPay = () => {
 };
 
 const chapterClick = (item: any) => {
-  if (item.percent > 95) {
+  if (item.percent > 95 || course.value.hasStudy) {
     router.push(`/video/${course.value.id}/${item.videoId}`);
   }
 };

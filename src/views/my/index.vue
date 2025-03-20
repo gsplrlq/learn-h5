@@ -58,7 +58,12 @@ const lgout = () => {
 
 <template>
   <div class="bg-slate-600 p-6 flex items-center mb-8">
-    <img class="mr-4 w-16 h-16 rounded-full" :src="data.avatar" alt="" srcset="" />
+    <img
+      class="mr-4 w-16 h-16 rounded-full"
+      :src="data.avatar"
+      alt=""
+      srcset=""
+    />
     <div class="text-white text-2xl">{{ data.nickName }}</div>
   </div>
 
