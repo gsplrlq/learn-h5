@@ -93,8 +93,8 @@ export default {
           trainingCourseId: route.params.id,
           mobile: value
         }).then(data => {
-          if (!data) {
-            resolve("该手机号不合法，请重新输入。");
+          if (!!data) {
+            resolve(data);
           } else {
             resolve(true);
           }

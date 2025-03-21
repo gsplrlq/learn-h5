@@ -228,6 +228,24 @@ export default defineComponent({
             beginTimer.value = true;
           });
 
+          player.on("pause", () => {
+            // clearTimeout(timer.value);
+
+            console.log("pause");
+          });
+
+          player.on("startSeek", () => {
+            // createHistory();
+
+            console.log("startSeek");
+          });
+
+          player.on("completeSeek", () => {
+            // createHistory();
+
+            console.log("completeSeek");
+          });
+
           player.on("error", () => {
             console.log("error");
           });
