@@ -85,15 +85,20 @@ export default {
       if (!/^1[3456789]\d{9}$/.test(value)) {
         return "手机号格式错误";
       }
-      validateEvaluation({
-        trainingCourseId: route.params.id,
-        mobile: value
-      }).then(res => {
-        if (res.data) {
-          return "该手机号已提交过测评";
-        } else {
-          return true;
-        }
+      return true;
+    };
+    const asyncValidator = value => {
+      return new Promise<string | boolean>(resolve => {
+        validateEvaluation({
+          trainingCourseId: route.params.id,
+          mobile: value
+        }).then(data => {
+          if (!data) {
+            resolve("该手机号不合法，请重新输入。");
+          } else {
+            resolve(true);
+          }
+        });
       });
     };
     const formList = [
@@ -165,7 +170,7 @@ export default {
       content9Suggestion: ""
     });
     const rules = reactive({
-      mobile: [{ validator: validatorMobile }],
+      mobile: [{ validator: validatorMobile }, { validator: asyncValidator }],
       content1: [{ required: true, message: "请选择评价", trigger: "change" }],
       content2: [{ required: true, message: "请选择评价", trigger: "change" }],
       content3: [{ required: true, message: "请选择评价", trigger: "change" }],

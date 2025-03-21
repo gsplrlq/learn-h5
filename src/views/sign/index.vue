@@ -4,7 +4,7 @@
       <van-image class="logo" height="40" :src="logo" />
       <van-image class="logo" height="40" :src="logoText" />
     </header>
-    <van-nav-bar title="线下签到" />
+    <van-nav-bar :title="title" />
     <van-form v-if="!success" label-align="top" @submit="onSubmit">
       <van-cell-group>
         <van-cell title="课程名称" :value="courseName" />
@@ -47,6 +47,7 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
+    const title = ref("");
     const courseName = ref("");
     const trainingCourseName = ref("");
     const phoneNumber = ref("");
@@ -75,10 +76,13 @@ export default {
       getSignIn(route.params.id).then(data => {
         courseName.value = data.courseName;
         trainingCourseName.value = data.trainingCourseName;
+        title.value =
+          data.trainingCourseType == "course" ? "线下课程签到" : "考试签到";
       });
     });
 
     return {
+      title,
       logo,
       logoText,
       courseName,
