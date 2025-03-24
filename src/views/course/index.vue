@@ -92,7 +92,7 @@
         v-else
         type="danger"
         :text="course.hasStudy ? '继续学习' : '开始学习'"
-        @click="router.push(`/video/${course.id}/${course.videoId}`)"
+        @click="toLearn"
       />
     </van-action-bar>
   </div>
@@ -127,7 +127,9 @@ let course = ref({
   courseType: 1,
   bought: false,
   videoId: 1, // 课程视频id
-  hasStudy: false // 是否已经学习过
+  hasStudy: false, // 是否已经学习过
+  autoClass: 0, // 是否自动加入班级
+  classId: 0 // 班级id
 });
 const activeTab = ref(0);
 const activeNames = ref([]);
@@ -145,6 +147,16 @@ const chapterList = ref([
 const toPay = () => {
   showToast("支付功能暂未开放...");
   // router.push(`/order/confirm/${course.value.id}/2`);
+};
+const toLearn = () => {
+  if (course.value.autoClass === 0 && !course.value.classId) {
+    return showToast("无法加入班级，请联系管理员。");
+  }
+  if (!course.value.videoId) {
+    return showToast("暂无视频");
+  }
+
+  router.push(`/video/${course.value.id}/${course.value.videoId}`);
 };
 
 const chapterClick = (item: any) => {

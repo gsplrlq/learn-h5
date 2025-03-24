@@ -229,19 +229,20 @@ export default defineComponent({
           });
 
           player.on("pause", () => {
+            createHistory();
             // clearTimeout(timer.value);
 
             console.log("pause");
           });
 
           player.on("startSeek", () => {
-            // createHistory();
+            createHistory();
 
             console.log("startSeek");
           });
 
           player.on("completeSeek", () => {
-            // createHistory();
+            createHistory();
 
             console.log("completeSeek");
           });
