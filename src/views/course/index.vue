@@ -150,7 +150,7 @@ const toPay = () => {
 };
 const toLearn = () => {
   if (course.value.autoClass === 0 && !course.value.classId) {
-    return showToast("无法加入班级，请联系管理员。");
+    return showToast("请联系管理员加入班级");
   }
   if (!course.value.videoId) {
     return showToast("暂无视频");

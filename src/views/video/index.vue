@@ -214,12 +214,13 @@ export default defineComponent({
           });
 
           player.on("play", () => {
-            if (!fSeek.value) {
+            if (!fSeek.value && lessonChapter.value.percent !== 100) {
               player.seek(lessonChapter.value.progress);
-
               setTimeout(() => {
                 fSeek.value = true;
               }, 100);
+            } else {
+              fSeek.value = true;
             }
 
             console.log("play");
@@ -381,5 +382,11 @@ export default defineComponent({
 
 .review-popup {
   padding: 16px;
+}
+</style>
+
+<style>
+.prism-setting-speed {
+  display: none !important;
 }
 </style>
