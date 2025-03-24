@@ -56,6 +56,7 @@ import { ref, onMounted } from "vue";
 import { Tab, Tabs, Card } from "vant";
 import { getUserCourse } from "@/api/user"; // Adjust the import according to your project structure
 import { useRouter } from "vue-router";
+import { showToast } from "vant";
 
 export default {
   components: {
@@ -93,6 +94,13 @@ export default {
       });
     };
     const continueLearning = c => {
+      if (c.autoClass === 0 && !c.classId) {
+        return showToast("请联系管理员加入班级");
+      }
+      if (!c.videoId) {
+        return showToast("暂无视频");
+      }
+
       router.push(`/video/${c.id}/${c.videoId}`);
       event.stopPropagation();
       // Jump to the course details page
