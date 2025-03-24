@@ -160,9 +160,14 @@ const toLearn = () => {
 };
 
 const chapterClick = (item: any) => {
-  if (item.percent > 95 || course.value.hasStudy) {
-    router.push(`/video/${course.value.id}/${item.videoId}`);
+  if (course.value.autoClass === 0 && !course.value.classId) {
+    return showToast("请联系管理员加入班级");
   }
+  if (!item.videoId) {
+    return showToast("暂无视频");
+  }
+
+  router.push(`/video/${course.value.id}/${item.videoId}`);
 };
 
 onMounted(async () => {

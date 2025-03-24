@@ -24,7 +24,7 @@
                 机构：{{ c.institutionName }}
               </div>
               <div>
-                {{ `已学 ${c.percent}% | 用时: ${getTime(c.progress)}` }}
+                {{ `已学 ${c.percent}% | 学习时间: ${getTime(c.progress)}` }}
               </div>
               <div>
                 {{ `学习至 ${c.chapterTitle}` }}
