@@ -200,21 +200,12 @@ export default defineComponent({
             // }
           });
 
-          player.on("canplay", function () {
-            console.log("canplay", lessonChapter.value.progress);
-            // player.seek(lessonChapter.value.progress);
-            // nextTick(() => {
-            //   fSeek.value = true;
-            // });
-          });
+          player.on("canplay", function () {});
 
-          player.on("ready", () => {
-            console.log("ready", lessonChapter.value.progress);
-            // player.seek(lessonChapter.value.progress);
-          });
+          player.on("ready", () => {});
 
           player.on("play", () => {
-            if (!fSeek.value && lessonChapter.value.percent !== 100) {
+            if (!fSeek.value) {
               player.seek(lessonChapter.value.progress);
               setTimeout(() => {
                 fSeek.value = true;
