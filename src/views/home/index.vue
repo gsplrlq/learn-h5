@@ -18,15 +18,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, shallowRef } from "vue";
+import { computed, onMounted, ref, shallowRef } from "vue";
 import Home from "./home.vue";
 import Course from "./course.vue";
 import Package from "./package.vue";
 import Exam from "./exam.vue";
+import { useRoute } from "vue-router";
 
 defineOptions({
   name: "Index"
 });
+const route = useRoute();
 
 const active = ref(0);
 const activeMenu = computed(() => menu.value[active.value]);
@@ -37,6 +39,14 @@ const menu = shallowRef([
   { title: "培训套餐", name: "package", component: Package },
   { title: "在线考试", name: "exam", component: Exam }
 ]);
+
+onMounted(() => {
+  // 这里可以进行一些初始化操作，比如获取数据等
+  // 例如：获取课程列表、套餐列表等
+  if (route.query.type) {
+    active.value = menu.value.findIndex(item => item.name === route.query.type);
+  }
+});
 </script>
 
 <style scoped lang="less">

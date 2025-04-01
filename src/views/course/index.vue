@@ -94,6 +94,12 @@
         :text="course.hasStudy ? '继续学习' : '开始学习'"
         @click="toLearn"
       />
+      <van-action-bar-button
+        v-if="course.allFinished"
+        type="success"
+        text="考试预约"
+        @click="toExam"
+      />
     </van-action-bar>
   </div>
 </template>
@@ -129,7 +135,8 @@ let course = ref({
   videoId: 1, // 课程视频id
   hasStudy: false, // 是否已经学习过
   autoClass: 0, // 是否自动加入班级
-  classId: 0 // 班级id
+  classId: 0, // 班级id
+  allFinished: false // 是否所有课程都已完成
 });
 const activeTab = ref(0);
 const activeNames = ref([]);
@@ -157,6 +164,9 @@ const toLearn = () => {
   }
 
   router.push(`/video/${course.value.id}/${course.value.videoId}`);
+};
+const toExam = () => {
+  router.push({ path: "/index", query: { type: "exam" } });
 };
 
 const chapterClick = (item: any) => {
