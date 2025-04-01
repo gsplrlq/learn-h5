@@ -10,16 +10,28 @@
     <div class="course-section">
       <h3 class="centered-title">
         <i class="centered-title-icon" />
-        为／你／推／荐
+        班／级／推／荐
         <i class="centered-title-icon icon1" />
       </h3>
       <van-row gutter="20">
         <van-col
-          v-for="course in courses.hotCourseList"
-          :key="course.id"
+          v-for="item in courses.classInfoItemList"
+          :key="item.id"
           span="24"
         >
-          <course-card :course="course" />
+          <class-card :classItem="item" />
+        </van-col>
+      </van-row>
+    </div>
+    <div class="course-section">
+      <h3 class="centered-title">
+        <i class="centered-title-icon" />
+        为／你／推／荐
+        <i class="centered-title-icon icon1" />
+      </h3>
+      <van-row gutter="20">
+        <van-col v-for="item in courses.hotCourseList" :key="item.id" span="24">
+          <course-card :course="item" />
         </van-col>
       </van-row>
     </div>
@@ -30,12 +42,8 @@
         <i class="centered-title-icon icon2" />
       </h3>
       <van-row gutter="20">
-        <van-col
-          v-for="course in courses.newCourseList"
-          :key="course.id"
-          span="24"
-        >
-          <course-card :course="course" />
+        <van-col v-for="item in courses.newCourseList" :key="item.id" span="24">
+          <course-card :course="item" />
         </van-col>
       </van-row>
     </div>
@@ -45,10 +53,15 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import CourseCard from "@/components/course/index.vue";
+import ClassCard from "@/components/classCard/index.vue";
 import { postBannerList, getHomeCourse } from "@/api/home";
 
 const swipe = ref([]);
-const courses = ref({ hotCourseList: [], newCourseList: [] });
+const courses = ref({
+  classInfoItemList: [],
+  hotCourseList: [],
+  newCourseList: []
+});
 
 defineOptions({
   name: "Home"

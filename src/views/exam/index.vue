@@ -93,8 +93,8 @@
 import { defineComponent, ref, onMounted, onBeforeUnmount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getExamDetail, putExam } from "@/api/exam";
+import { createEvaluation, updateEvaluation } from "@/api/lesson";
 import { showConfirmDialog, showDialog, showToast } from "vant";
-
 export default defineComponent({
   name: "Exam",
   setup() {
@@ -116,6 +116,20 @@ export default defineComponent({
         if (examData.value.duration > 0) {
           durationTime.value = examData.value.duration * 60;
           startTimer();
+        }
+
+        // 满意度测评
+        if (!examData.value.hasEvaluation) {
+          createEvaluation({ courseId: examData.value.courseId });
+
+          // 弹框进行满意度测评
+          showDialog({
+            message: "请进行满意度测评！",
+            showCancelButton: false,
+            confirmButtonText: "去测评"
+          }).then(() => {
+            router.push(`/exam/evaluation/${examData.value.courseId}`);
+          });
         }
       } catch {
         examData.value = {};

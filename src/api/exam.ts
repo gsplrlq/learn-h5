@@ -30,3 +30,10 @@ export function getExamResult(id: string): Promise<any> {
     method: "get"
   });
 }
+
+export function getInformationCollStatus(): Promise<any> {
+  return http.request({
+    url: `/client/user/user/getInformationCollStatus`,
+    method: "get"
+  });
+}

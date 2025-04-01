@@ -157,6 +157,14 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: "考试详情"
         }
+      },
+      {
+        path: "exam/evaluation/:courseId",
+        name: "ExamEvaluation",
+        component: () => import("@/views/exam/evaluation.vue"),
+        meta: {
+          title: "满意度测评"
+        }
       }
     ]
   },

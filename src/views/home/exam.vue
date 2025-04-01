@@ -20,14 +20,14 @@
             <div v-if="exam.courseName" class="trainingPackage">
               所属课程: {{ exam.courseName }}
             </div>
-            <van-button
+            <!-- <van-button
               type="default"
               size="small"
               style="float: right"
               disabled
               text="无法考试"
-            />
-            <!-- <van-button
+            /> -->
+            <van-button
               v-if="exam.examFlag == 'yes'"
               type="primary"
               size="small"
@@ -42,7 +42,7 @@
               style="float: right"
               disabled
               text="无法考试"
-            /> -->
+            />
           </template>
         </van-cell>
         <template v-if="exams.length === 0">
@@ -59,7 +59,8 @@ import { defineComponent, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { List, Cell, Empty } from "vant";
 import { useAuthStore } from "@/store/modules/auth";
-import { getExamList } from "@/api/exam";
+import { getExamList, getInformationCollStatus } from "@/api/exam";
+import { showToast } from "vant";
 
 export default defineComponent({
   name: "ExamList",
@@ -75,6 +76,7 @@ export default defineComponent({
     const loading = ref(false);
     const finished = ref(false);
     const page = ref(0);
+    const infoStatus = ref(false); // User information status
 
     onMounted(() => {
       // Check if the user is logged in
@@ -82,6 +84,22 @@ export default defineComponent({
       if (!isLoggedIn.value) {
         router.push("/login"); // Redirect to login page if not logged in
       }
+
+      getInformationCollStatus().then(data => {
+        infoStatus.value = data;
+        if (!infoStatus.value) {
+          showToast("用户信息不完善, 请在网页端完善用户信息。");
+
+          // this.$confirm("用户信息不完善, 是否跳转并完善用户信息?", "提示", {
+          //   confirmButtonText: "确定",
+          //   cancelButtonText: "取消",
+          //   type: "warning"
+          // })
+          //   .then(() => {
+          //     this.$router.push({ path: "/user" });
+          //   })
+        }
+      });
     });
 
     const checkLoginStatus = (): boolean => {
@@ -119,6 +137,10 @@ export default defineComponent({
     };
 
     const startExam = (examId: number) => {
+      if (!infoStatus.value) {
+        showToast("用户信息不完善, 请在网页端完善用户信息。");
+        return;
+      }
       // Implement your start exam logic here
       router.push(`/exam/${examId}`);
       console.log(`Starting exam with ID: ${examId}`);

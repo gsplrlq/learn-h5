@@ -86,7 +86,7 @@ import QuestionList from "../course/question.vue";
 import NoteList from "../course/note.vue";
 import ReviewList from "../course/review.vue";
 import { showToast } from "vant";
-import { showFailToast } from "vant";
+import { showFailToast, showConfirmDialog } from "vant";
 
 export default defineComponent({
   name: "VideoPlayer",
@@ -183,21 +183,14 @@ export default defineComponent({
             );
             const nextVideo = videoList.value[currentIndex + 1];
             if (nextVideo && !fEnd.value) {
-              showToast("视频播放完成，即将跳转至下一章。");
-              setTimeout(() => {
+              showConfirmDialog({
+                title: "提示",
+                message: "视频播放完成，是否继续至下一章?"
+              }).then(() => {
                 update(nextVideo);
-              }, 2000);
-              fEnd.value = true;
-            }
-            // else {
-            //   // 满意度调查
-            //   if (!beginEvaluation.value) {
-            //     createEvaluation({ courseId: route.params.courseId });
-
-            //     showPopup.value = true;
-            //   }
-            //   beginEvaluation.value = true;
-            // }
+                fEnd.value = true;
+              });
+            } else showToast("视频播放完成");
           });
 
           player.on("canplay", function () {});
@@ -222,7 +215,6 @@ export default defineComponent({
 
           player.on("pause", () => {
             createHistory();
-            // clearTimeout(timer.value);
 
             console.log("pause");
           });
