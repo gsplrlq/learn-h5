@@ -20,15 +20,15 @@
             <div v-if="exam.courseName" class="trainingPackage">
               所属课程: {{ exam.courseName }}
             </div>
-            <!-- <van-button
-              type="default"
+            <van-button
+              v-if="exam.passFlag"
+              type="success"
               size="small"
               style="float: right"
-              disabled
-              text="无法考试"
-            /> -->
+              text="考试已通过"
+            />
             <van-button
-              v-if="exam.examFlag == 'yes'"
+              v-else-if="exam.examFlag == 'yes'"
               type="primary"
               size="small"
               style="float: right"
