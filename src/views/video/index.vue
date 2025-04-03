@@ -183,13 +183,23 @@ export default defineComponent({
             );
             const nextVideo = videoList.value[currentIndex + 1];
             if (nextVideo && !fEnd.value) {
+              // 5秒后跳转到下一章
+              // const timer1 = setTimeout(() => {
+              //   update(nextVideo);
+              //   fEnd.value = true;
+              // }, 5000);
               showConfirmDialog({
                 title: "提示",
                 message: "视频播放完成，是否继续至下一章?"
-              }).then(() => {
-                update(nextVideo);
-                fEnd.value = true;
-              });
+              })
+                .then(() => {
+                  update(nextVideo);
+                  fEnd.value = true;
+                })
+                .catch(() => {
+                  // clearTimeout(timer1);
+                  // fEnd.value = false;
+                });
             } else showToast("视频播放完成");
           });
 
