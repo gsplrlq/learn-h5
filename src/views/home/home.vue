@@ -22,6 +22,9 @@
           <class-card :classItem="item" />
         </van-col>
       </van-row>
+      <div v-if="courses.classInfoItemList.length === 0" class="no-data">
+        暂无数据
+      </div>
     </div>
     <div class="course-section">
       <h3 class="centered-title">
@@ -34,6 +37,9 @@
           <course-card :course="item" />
         </van-col>
       </van-row>
+      <div v-if="courses.hotCourseList.length === 0" class="no-data">
+        暂无数据
+      </div>
     </div>
     <div class="course-section">
       <h3 class="centered-title">
@@ -46,6 +52,9 @@
           <course-card :course="item" />
         </van-col>
       </van-row>
+      <div v-if="courses.newCourseList.length === 0" class="no-data">
+        暂无数据
+      </div>
     </div>
   </div>
 </template>
@@ -103,5 +112,11 @@ onMounted(() => {
 }
 .centered-title-icon.icon2 {
   background-position: center -72px;
+}
+
+.no-data {
+  text-align: center;
+  color: #999;
+  margin-bottom: 20px;
 }
 </style>

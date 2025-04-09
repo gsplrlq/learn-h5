@@ -183,6 +183,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: "满意度测评"
     }
+  },
+  {
+    path: "/jump",
+    name: "jump",
+    component: () => import("@/views/jump/index.vue"),
+    meta: {
+      title: "跳转"
+    }
   }
 ];
 

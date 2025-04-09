@@ -65,6 +65,14 @@
         </div>
       </div>
     </van-popup>
+
+    <div v-if="isBrowserUnsupported" class="browser-warning">
+      <p class="p-4">当前浏览器可能无法正常播放视频，请使用默认浏览器打开。</p>
+
+      <!-- <van-button type="primary" @click="openInDefaultBrowser"
+        >使用默认浏览器打开</van-button
+      > -->
+    </div>
   </div>
 </template>
 
@@ -86,7 +94,7 @@ import QuestionList from "../course/question.vue";
 import NoteList from "../course/note.vue";
 import ReviewList from "../course/review.vue";
 import { showToast } from "vant";
-import { showFailToast, showConfirmDialog } from "vant";
+import { showFailToast, showConfirmDialog, showDialog } from "vant";
 
 export default defineComponent({
   name: "VideoPlayer",
@@ -338,6 +346,31 @@ export default defineComponent({
     };
 
     onMounted(async () => {
+      const isUcOrQqBrowser = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        console.log("ua", ua);
+        // 检测UC或QQ浏览器
+        return (
+          ua.includes("ucbrowser") ||
+          ua.includes("ucweb") ||
+          ua.includes("uc") ||
+          ua.includes("mqqbrowser") ||
+          ua.includes("qqbrowser") ||
+          ua.includes("qq")
+        );
+      };
+
+      if (isUcOrQqBrowser()) {
+        showDialog({
+          title: "提示",
+          message: "当前浏览器不支持视频播放，请更换浏览器后重试"
+        }).then(() => {});
+        isBrowserUnsupported.value = true;
+        // const url = window.location.href;
+        // window.location.href = `mttbrowser://url=${encodeURIComponent(url)}`;
+        return;
+      }
+
       if (!route.params.videoId) {
         return showFailToast("视频异常，无法播放，请联系管理员");
       }
@@ -354,6 +387,13 @@ export default defineComponent({
       }
     });
 
+    const isBrowserUnsupported = ref(false);
+
+    const openInDefaultBrowser = () => {
+      const url = window.location.href;
+      window.location.href = `mttbrowser://url=${encodeURIComponent(url)}`;
+    };
+
     return {
       activeTab,
       course,
@@ -361,7 +401,9 @@ export default defineComponent({
       showPopup,
       rating,
       fSeek,
-      onConfirm
+      onConfirm,
+      isBrowserUnsupported,
+      openInDefaultBrowser
     };
   }
 });
