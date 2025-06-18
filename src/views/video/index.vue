@@ -181,7 +181,7 @@ export default defineComponent({
         player => {
           player.on("ended", () => {
             console.log("ended");
-            clearTimeout(timer.value);
+            // clearTimeout(timer.value);
             createHistory();
 
             const currentIndex = videoList.value.findIndex(
