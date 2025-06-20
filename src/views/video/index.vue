@@ -137,6 +137,9 @@ export default defineComponent({
     const rating = ref("满意");
     const fEnd = ref(false);
 
+    let lastSendTime = ref(0);
+    let lastReportedSecond = ref(0);
+
     const getCourseDetail = async (classId: number) => {
       const data = await getLessonDetail(route.params.courseId);
       data.hasStudy = true;
@@ -227,8 +230,23 @@ export default defineComponent({
 
             console.log("play");
             createHistory();
-            startTimer(beginTimer.value);
-            beginTimer.value = true;
+            // startTimer(beginTimer.value);
+            // beginTimer.value = true;
+          });
+
+          player.on("timeupdate", () => {
+            console.log("timeupdate");
+            const currentTime = Math.floor(player.getCurrentTime());
+            const now = Date.now();
+            if (
+              currentTime !== lastReportedSecond.value &&
+              now - lastSendTime.value > 5000
+            ) {
+              lastReportedSecond.value = currentTime;
+              lastSendTime.value = now;
+
+              createHistory();
+            }
           });
 
           player.on("pause", () => {
@@ -315,6 +333,9 @@ export default defineComponent({
         courseId: route.params.courseId,
         videoId: route.params.videoId
       });
+      if (!playauth) {
+        return showFailToast("视频异常，无法播放，请联系管理员");
+      }
       lessonChapter.value.playauth = playauth;
       createPlayer();
     };

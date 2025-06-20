@@ -45,7 +45,7 @@
               v-for="subItem in item.chapterList"
               :key="subItem.id"
               :title="subItem.title"
-              :label="`时长: ${subItem.durationStr}`"
+              :label="`时长: ${subItem.durationStr || ''}`"
               @click="chapterClick(subItem)"
             >
               <!-- @click="router.push(`/video/${course.id}/${subItem.videoId}`)" -->
@@ -146,7 +146,7 @@ const chapterList = ref([
     id: 1,
     title: "第一章",
     chapterList: [
-      { id: 1, title: "第一节", videoId: 1, durationStr: "10分钟", percent: 50 }
+      { id: 1, title: "第一节", videoId: 1, durationStr: null, percent: 50 }
     ]
   }
 ]);
