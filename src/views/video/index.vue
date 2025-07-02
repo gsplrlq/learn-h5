@@ -171,6 +171,7 @@ export default defineComponent({
           id: "player-con",
           vid: lessonChapter.value.videoId, // 如果是私有加密播放请传入 vid/playauth/encryptType
           playauth: lessonChapter.value.playauth,
+          authTimeout: 3600 * 10,
           width: "100%",
           height: "260px",
           autoplay: false,
